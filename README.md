@@ -18,15 +18,19 @@ ts := timeseries.NewTimeSeriesIntquantDuration)
 
 quantDuration must be ```time.Duration```
 
-## Add Data with Time
+## Manipulate with data
+Add Data with Time
 ```go
 ts.Add(time.Now(), 12)
 ```
 
-## Manipulate with data
 Get values from ```timeStart``` to ```timeStop``` as slice
 ```go
 rangeVals = ts.GetIntervalSerieSlice(timeStart, timeStop)
+```
+Zero all values from ```timeStart``` to ```timeStop``` 
+```go
+ts.ClearInterval(timeStart, timeStop)
 ```
 Get values from ```timeStart``` to ```timeStop``` as as map, excluding zero values
 ```go

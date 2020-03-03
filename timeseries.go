@@ -7,7 +7,7 @@ import (
 )
 
 type TimeSerieInt struct {
-	data map[int64]int
+	data         map[int64]int
 	quantization int64 // quantization interval in nanoseconds
 }
 
@@ -50,8 +50,8 @@ func (ts *TimeSerieInt) Sum(from, to time.Time) int {
 		return -1
 	}
 	var sum = 0
-	for i:=fromUnix; i<toUnix; i += ts.quantization {
-		sum +=ts.data[i]
+	for i := fromUnix; i < toUnix; i += ts.quantization {
+		sum += ts.data[i]
 	}
 	return sum
 }
@@ -62,9 +62,9 @@ func (ts *TimeSerieInt) GetIntervalSerieSlice(from, to time.Time) (serie []int) 
 	if fromUnix > toUnix {
 		return
 	}
-	serie = make([]int, (toUnix - fromUnix) / ts.quantization)
+	serie = make([]int, (toUnix-fromUnix)/ts.quantization)
 	i2 := 0
-	for i:=fromUnix; i<toUnix; i += ts.quantization {
+	for i := fromUnix; i < toUnix; i += ts.quantization {
 		serie[i2] = ts.data[i]
 		i2++
 	}
@@ -78,9 +78,9 @@ func (ts *TimeSerieInt) GetIntervalSerieMap(from, to time.Time) (serie map[time.
 		return
 	}
 	serie = map[time.Time]int{}
-	for i:=fromUnix; i<toUnix; i += ts.quantization {
+	for i := fromUnix; i < toUnix; i += ts.quantization {
 		if value, ok := ts.data[i]; ok {
-			serie[time.Unix(0,i)] = value
+			serie[time.Unix(0, i)] = value
 		}
 	}
 	return
@@ -98,6 +98,16 @@ func (ts *TimeSerieInt) FitstLastTimeTime() (first, last time.Time) {
 		}
 	}
 	return time.Unix(0, minTime), time.Unix(0, maxTime)
+}
+
+func (ts *TimeSerieInt) ClearInterval(from, to time.Time) {
+	fromUnix := ts.GetRoundedUnixTime(from)
+	toUnix := ts.GetRoundedUnixTime(to)
+	for i := fromUnix; i < toUnix; i += ts.quantization {
+		if _, ok := ts.data[i]; ok {
+			delete(ts.data, i)
+		}
+	}
 }
 
 func (ts *TimeSerieInt) PrettyPrint(showZeroes bool) {
@@ -119,6 +129,6 @@ func (ts *TimeSerieInt) PrettyPrint(showZeroes bool) {
 
 func (ts *TimeSerieInt) GetRoundedUnixTime(t time.Time) int64 {
 	//unixNano := (t.Unix()*1000000000 + t.UnixNano())
-	unixNano :=  t.UnixNano()
+	unixNano := t.UnixNano()
 	return unixNano - (unixNano % ts.quantization)
 }
