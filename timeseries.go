@@ -139,7 +139,7 @@ func (ts *TimeSerieInt) PrettyPrint(showZeroes bool) {
 		}
 		first = first.Add(time.Duration(ts.quantization))
 	}
-	ts.lock.Unlock()
+	ts.lock.RUnlock()
 	fmt.Println("]")
 }
 
