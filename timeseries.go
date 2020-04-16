@@ -122,6 +122,9 @@ func (ts *TimeSerieInt) ClearInterval(from, to time.Time) {
 			delete(ts.data, i)
 		}
 	}
+	if fromUnix == toUnix {
+		delete(ts.data, fromUnix)
+	}
 	ts.lock.Unlock()
 }
 
