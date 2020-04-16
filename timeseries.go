@@ -125,6 +125,10 @@ func (ts *TimeSerieInt) ClearInterval(from, to time.Time) {
 	ts.lock.Unlock()
 }
 
+func (ts *TimeSerieInt) GetQuant() time.Duration {
+	return time.Duration(ts.quantization)
+}
+
 func (ts *TimeSerieInt) PrettyPrint(showZeroes bool) {
 	first, last := ts.FitstLastTimeTime()
 	fmt.Println("[")
